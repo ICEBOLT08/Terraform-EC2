@@ -59,4 +59,82 @@ Feel free to modify the configuration files according to your requirements and c
 
 --- 
 
+
+
+## Creating EC2 Instances with Terraform on AWS, Azure, or Google Cloud
+
+This guide demonstrates how to use Terraform to provision EC2 instances on AWS, Azure, or Google Cloud while utilizing input and output variable files.
+
+
+## Steps to Provision EC2 Instances
+
+### 1. Set Up Provider Configuration
+
+In your Terraform configuration file (e.g., `main.tf`), specify the provider you want to use (AWS, Azure, or Google Cloud) along with any required authentication details. For example, for AWS:
+
+```hcl
+provider "aws" {
+  region = "var.region"  # Specify your desired region
+}
+```
+
+### 2. Define Input Variables
+
+Create a separate file (e.g., `variables.tf`) to define input variables that will be used in your Terraform configuration. These variables can include details such as instance type, AMI ID, key pair name, etc.
+
+```hcl
+variable "region" {
+  default = "us-east-1"
+}
+
+variable "ami" {
+  default = "ami-080e1f13689e07408"
+}
+
+variable "instance-type" {
+  default = "t2.micro"
+}
+```
+
+### 3. Write Terraform Configuration
+
+In your Terraform configuration file (`main.tf`), use the input variables defined in the previous step to specify the configuration of the EC2 instance(s) you want to provision.
+
+```hcl
+provider "aws" {
+  region = var.region
+}
+
+resource "aws_instance" "example" {
+  ami = var.ami
+  instance_type = var.instance-type
+}
+```
+
+### 4. Define Output Variables
+
+Create another file (e.g., `outputs.tf`) to define output variables that you want to display after Terraform applies the configuration. Output variables can include information such as instance IP addresses, DNS names, etc.
+
+```hcl
+output "instance_public_ip" {
+  description = "Public IP address of the EC2 instance"
+  value       = aws_instance.example.public_ip
+}
+```
+
+### 5. Initialize and Apply Terraform Configuration
+
+Navigate to the directory containing your Terraform configuration files and run the following commands:
+
+```bash
+terraform init
+terraform plan
+terraform apply
+```
+
+Follow the prompts to confirm and apply the changes. Terraform will provision the EC2 instance(s) according to the configuration specified.
+
+## Conclusion
+
+By following these steps, you can leverage Terraform to easily provision EC2 instances on AWS, Azure, or Google Cloud while maintaining consistency and scalability through infrastructure as code.
 This README provides an overview of using Terraform to provision infrastructure and outlines the installation process along with theoretical insights. For detailed examples and configurations, please refer to the accompanying files in the repository.
